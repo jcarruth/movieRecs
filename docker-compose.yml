@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  movies:
+    build:
+      context: .
+    ports:
+      - 5000:5000
+    volumes:
+      - ./movie_recs:/movie_recs
+    environment:
+      - FLASK_DEBUG=1
+
