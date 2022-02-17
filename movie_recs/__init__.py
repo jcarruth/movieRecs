@@ -33,4 +33,7 @@ def create_app(test_config=None):
     from .db import init_app
     init_app(app)
 
+    from .cli import add_cli_commands
+    add_cli_commands(app)
+
     return app
