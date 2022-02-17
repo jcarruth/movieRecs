@@ -29,6 +29,13 @@ def close_db(e=None):
         db.client.close()
 
 
+def add_movie(movie_data: dict):
+    """ Adds a single movie to the database """
+    db = get_db()
+    movie_collection = db.movies
+    movie_collection.insert_one(movie_data)
+
+
 def init_app(app: Flask):
     """ Register any necessary methods with the app """
     app.teardown_appcontext(close_db)
