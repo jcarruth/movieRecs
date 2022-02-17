@@ -10,6 +10,7 @@ def create_app():
         DB_PASSWORD="example",
         DB_HOST="mongo",
         DB_PORT=27017,
+        DB_NAME="movie_recs",
         SECRET_KEY='dev',
     )
 
