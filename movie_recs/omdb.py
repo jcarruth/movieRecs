@@ -2,6 +2,7 @@
 import requests
 
 from flask import current_app
+from slugify import slugify
 
 def get_movie_data(movie_title: str) -> dict:
     """ Get data for a movie title """
@@ -23,5 +24,6 @@ def get_movie_data(movie_title: str) -> dict:
     response = requests.get("http://www.omdbapi.com/", params=params)
     movie_data = response.json()
     movie_data["Synopsis"] = synopsis
+    movie_data["slug"] = slugify(movie_data["Title"])
 
     return movie_data
