@@ -2,13 +2,13 @@
 
 FROM python:3.9-slim-buster
 
-WORKDIR /movie_recs
+WORKDIR /
 
 COPY requirements.txt requirements.txt
 
 RUN pip install -r requirements.txt
 
-COPY movie_recs .
+COPY movie_recs movie_recs
 
 ENV FLASK_APP=movie_recs
 
