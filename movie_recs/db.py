@@ -17,7 +17,7 @@ def get_db() -> MongoClient:
     return g.db
 
 
-def close_db():
+def close_db(e=None):
     """ Closes the database connection """
     db: MongoClient = g.pop("db", None)
 
