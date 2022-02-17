@@ -1,3 +1,5 @@
+""" Manages connection to a mongoDb database """
+
 from pymongo import MongoClient
 
 from flask import Flask, current_app, g
