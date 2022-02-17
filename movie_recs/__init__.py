@@ -17,4 +17,7 @@ def create_app():
     def test():
         return "test"
 
+    from .db import init_app
+    init_app(app)
+
     return app

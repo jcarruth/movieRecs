@@ -1,6 +1,6 @@
 from pymongo import MongoClient
 
-from flask import current_app, g
+from flask import Flask, current_app, g
 
 
 def get_db() -> MongoClient:
@@ -12,7 +12,7 @@ def get_db() -> MongoClient:
         host = current_app.config["DB_HOST"]
         port = current_app.config["DB_PORT"]
         uri = f"mongodb://{username}:{password}@{host}:{port}"
-        g.db = MongoClient(uri)
+        g["db"] = MongoClient(uri)
 
     return g.db
 
@@ -23,3 +23,8 @@ def close_db():
 
     if db is not None:
         db.close()
+
+
+def init_app(app: Flask):
+    """ Register any necessary methods with the app """
+    app.teardown_appcontext(close_db)
