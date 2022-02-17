@@ -111,7 +111,7 @@ movies = [
 
 
 @app.route("/random")
-def index():
+def random_movie():
     """Recommends a random movie
 
     Returns:
