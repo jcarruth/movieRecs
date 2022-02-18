@@ -10,65 +10,66 @@ from flask import Flask, current_app, g
 def get_db() -> Database:
     """Provides access to the database"""
 
-    if "db" not in g:
+    if "database" not in g:
         username = current_app.config["DB_USER"]
         password = current_app.config["DB_PASSWORD"]
         host = current_app.config["DB_HOST"]
         port = current_app.config["DB_PORT"]
         uri = f"mongodb://{username}:{password}@{host}:{port}"
         client = MongoClient(uri)
-        g.db = client[current_app.config["DB_NAME"]]
+        g.database = client[current_app.config["DB_NAME"]]
 
-    return g.db
+    return g.database
 
 
-def close_db(e=None):
+def close_db(_=None):
     """ Closes the database connection """
-    db: Database = g.pop("db", None)
+    database: Database = g.pop("db", None)
 
-    if db is not None:
-        db.client.close()
+    if database is not None:
+        database.client.close()
 
 
 def clear_db():
     """ Clear all collections from database """
-    db = get_db()
+    database = get_db()
 
-    for collection in db.list_collection_names():
-        db.drop_collection(collection)
+    for collection in database.list_collection_names():
+        database.drop_collection(collection)
 
 
 def init_collections():
     """ Set up collections in database with indices """
-    db = get_db()
+    database = get_db()
 
-    db.movies.create_index("slug", unique=True)
-    db.users.create_index("username", unique=True)
+    database.movies.create_index("slug", unique=True)
+    database.users.create_index("username", unique=True)
 
 
 def add_movie(movie_data: dict):
     """ Adds a single movie to the database """
-    db = get_db()
-    movie_collection = db.movies
+    database = get_db()
+    movie_collection = database.movies
     movie_collection.insert_one(movie_data)
 
 
 def add_user(username: str, password_hash: str):
     """ Add a user to the database """
 
-    db = get_db()
     user_data = {
         "username": username,
         "password_hash": password_hash,
     }
-    db.users.insert_one(user_data)
+
+    database = get_db()
+    database.users.insert_one(user_data)
 
 
 def get_user_by_username(username: str):
     """ Look up a user using their username """
-    db = get_db()
+    database = get_db()
 
-    user = db.users.find_one({"username": username})
+    user = database.users.find_one({"username": username})
 
     if user is not None:
         user["_id"] = str(user["_id"])
@@ -78,9 +79,9 @@ def get_user_by_username(username: str):
 
 def get_user_by_id(user_id: str):
     """ Look up a user using their id """
-    db = get_db()
+    database = get_db()
 
-    user = db.users.find_one({"_id": ObjectId(user_id)})
+    user = database.users.find_one({"_id": ObjectId(user_id)})
 
     if user is not None:
         user["_id"] = str(user["_id"])
