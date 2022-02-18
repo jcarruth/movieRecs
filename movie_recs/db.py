@@ -29,6 +29,14 @@ def close_db(e=None):
         db.client.close()
 
 
+def clear_db():
+    """ Clear all collections from database """
+    db = get_db()
+
+    for collection in db.list_collection_names():
+        db.drop_collection(collection)
+
+
 def add_movie(movie_data: dict):
     """ Adds a single movie to the database """
     db = get_db()

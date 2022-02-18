@@ -10,11 +10,7 @@ from .omdb import get_movie_data
 
 def init_db():
     """ Clear all collections from the database, then add classic movies"""
-    db = get_db()
-
-    # Clear all collections from database
-    for collection in db.list_collection_names():
-        db.drop_collection(collection)
+    clear_db()
 
     # Add all top 100 classic movies to the database
     for movie_title in top_100_classic_movies:
