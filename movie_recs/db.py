@@ -1,6 +1,8 @@
 """ Manages connection to a mongoDb database """
 
+from cgitb import lookup
 from pymongo import MongoClient
+from bson.objectid import ObjectId
 from pymongo.database import Database
 
 from flask import Flask, current_app, g
@@ -50,6 +52,37 @@ def add_movie(movie_data: dict):
     db = get_db()
     movie_collection = db.movies
     movie_collection.insert_one(movie_data)
+
+
+def add_user(username: str, password_hash: str):
+    """ Add a user to the database """
+
+    db = get_db()
+    user_data = {
+        "username": username,
+        "password_hash": password_hash,
+    }
+    db.users.insert_one(user_data)
+
+
+def get_user_by_username(username: str):
+    """ Look up a user using their username """
+    db = get_db()
+
+    user = db.users.find_one({"username": username})
+    user["_id"] = str(user["_id"])
+
+    return user
+
+
+def get_user_by_id(user_id: str):
+    """ Look up a user using their id """
+    db = get_db()
+
+    user = db.users.find_one({"_id": ObjectId(user_id)})
+    user["_id"] = str(user["_id"])
+
+    return user
 
 
 def init_app(app: Flask):
