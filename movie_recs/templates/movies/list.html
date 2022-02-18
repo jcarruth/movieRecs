@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block header %}
+<h1>{% block title %}Movies{% endblock %}</h1>
+{% if g.user %}
+<a href="url_for('movies.add')">New</a>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="list-group-flush shadow-lg">
+    {% for movie in movies %}
+    <a href="{{ url_for('movies.movie_details', slug=movie['slug']) }}"
+        class="list-group-item list-group-item-action list-group-item-dark">
+        <div class="row">
+            <div class="col-lg-2">
+                <img src="{{ movie['Poster'] }}" class="img-thumbnail img-fluid" style="max-height: 200px" />
+            </div>
+            <div class="col-lg">
+                <article>
+                    <div class="d-flex justify-content-between align-items-end">
+                        <span class="h3">{{ movie["Title"] }}</span>
+                        <span class="h6">{{ movie["Genre"] }}</span>
+                    </div>
+                    <p>{{ movie["Synopsis"] }}</p>
+                </article>
+            </div>
+        </div>
+    </a>
+    {% endfor %}
+</div>
+{% endblock %}
