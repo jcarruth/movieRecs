@@ -3,7 +3,7 @@ import click
 from flask import Flask
 from flask.cli import with_appcontext
 
-from .db import get_db, add_movie
+from .db import clear_db, init_collections, add_movie
 from .movie_list import top_100_classic_movies
 from .omdb import get_movie_data
 
@@ -11,6 +11,7 @@ from .omdb import get_movie_data
 def init_db():
     """ Clear all collections from the database, then add classic movies"""
     clear_db()
+    init_collections()
 
     # Add all top 100 classic movies to the database
     for movie_title in top_100_classic_movies:

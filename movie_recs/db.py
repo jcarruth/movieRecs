@@ -37,6 +37,14 @@ def clear_db():
         db.drop_collection(collection)
 
 
+def init_collections():
+    """ Set up collections in database with indices """
+    db = get_db()
+
+    db.movies.create_index("slug", unique=True)
+    db.users.create_index("username", unique=True)
+
+
 def add_movie(movie_data: dict):
     """ Adds a single movie to the database """
     db = get_db()
