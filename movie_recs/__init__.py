@@ -1,3 +1,5 @@
+""" Website for keeping track of a list of movies to watch """
+
 import os
 
 from flask import Flask
