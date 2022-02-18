@@ -61,6 +61,15 @@ def get_movies():
     return list(movie_collection.find())
 
 
+def get_movie_by_slug(slug: str):
+    """ Returns a list of movies"""
+
+    database = get_db()
+    movie_collection = database.movies
+
+    return movie_collection.find_one({"slug": slug})
+
+
 def add_user(username: str, password_hash: str):
     """ Add a user to the database """
 
