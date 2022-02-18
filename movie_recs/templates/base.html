@@ -12,12 +12,10 @@
 <body>
     <nav class="navbar navbar-expand-sm bg-dark text-white navbar-dark">
         <div class="container">
-            <h1>Movie Recs</h1>
+            <a class="navbar-brand" href="{{ url_for('index') }}">Movie Recs</a>
             <ul class="navbar-nav">
                 {% if g.user %}
-                <li class="nav-item">
-                    <span>{{ g.user["username"] }}</span>
-                </li>
+                <span class="navbar-text">{{ g.user["username"] }}</span>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('auth.logout') }}">Log Out</a></span>
                 </li>
