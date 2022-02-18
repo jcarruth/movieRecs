@@ -19,14 +19,14 @@
                     <span>{{ g.user["username"] }}</span>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for['auth.logout'] }}">Log Out</a></span>
+                    <a class="nav-link" href="{{ url_for('auth.logout') }}">Log Out</a></span>
                 </li>
                 {% else %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for['auth.register'] }}">Register</a></span>
+                    <a class="nav-link" href="{{ url_for('auth.register') }}">Register</a></span>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for['auth.login'] }}">Log In</a></span>
+                    <a class="nav-link" href="{{ url_for('auth.login') }}">Log In</a></span>
                 </li>
                 {% endif %}
             </ul>
