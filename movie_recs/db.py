@@ -1,9 +1,8 @@
 """ Manages connection to a mongoDb database """
 
-from cgitb import lookup
 from pymongo import MongoClient
-from bson.objectid import ObjectId
 from pymongo.database import Database
+from bson.objectid import ObjectId
 
 from flask import Flask, current_app, g
 
