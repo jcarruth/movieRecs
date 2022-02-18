@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block header %}
+<h1>{% block title %}{{ movie["Title"] }}{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<div class="container p-5 my-3 bg-dark text-white shadow-lg">
+    <div class="row">
+        <div class="col-lg-4">
+            <img src="{{ movie['Poster'] }}" class="img-thumbnail img-fluid mx-auto d-block" />
+        </div>
+        <div class="col-lg-8">
+            <dl>
+                <dt>Year</dt>
+                <dd>{{ movie["Year"] }}</dd>
+                <dt>Runtime</dt>
+                <dd>{{ movie["Runtime"] }}</dd>
+                <dt>Genre</dt>
+                <dd>{{ movie["Genre"] }}</dd>
+                <dt>Director</dt>
+                <dd>{{ movie["Director"] }}</dd>
+                <dt>Actors</dt>
+                <dd>{{ movie["Actors"] }}</dd>
+                <dt>Synopsis</dt>
+                <dd>{{ movie["Synopsis"] }}</dd>
+                <dt>Plot</dt>
+                <dd>{{ movie["Plot"] }}</dd>
+            </dl>
+        </div>
+    </div>
+</div>
+{% endblock %}
