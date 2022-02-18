@@ -32,4 +32,7 @@ def create_app(test_config=None):
     from .cli import add_cli_commands
     add_cli_commands(app)
 
+    from . import auth
+    app.register_blueprint(auth.bp)
+
     return app
