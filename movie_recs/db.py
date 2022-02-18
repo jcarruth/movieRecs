@@ -52,6 +52,15 @@ def add_movie(movie_data: dict):
     movie_collection.insert_one(movie_data)
 
 
+def get_movies():
+    """ Returns a list of movies"""
+
+    database = get_db()
+    movie_collection = database.movies
+
+    return list(movie_collection.find())
+
+
 def add_user(username: str, password_hash: str):
     """ Add a user to the database """
 
