@@ -1,8 +1,8 @@
 """ Provides access to the Open Movie Database """
 import requests
-
 from flask import current_app
 from slugify import slugify
+
 
 def get_movie_data(movie_title: str) -> dict:
     """ Get data for a movie title """

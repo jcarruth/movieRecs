@@ -3,7 +3,7 @@ import click
 from flask import Flask
 from flask.cli import with_appcontext
 
-from .db import clear_db, init_collections, add_movie
+from .db import add_movie, clear_db, init_collections
 from .movie_list import top_100_classic_movies
 from .omdb import get_movie_data
 

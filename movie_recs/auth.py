@@ -1,9 +1,10 @@
 """ Provides authentication blueprint """
 import functools
 
-from flask import Blueprint, flash, g, redirect, request, render_template, session, url_for
+from flask import (Blueprint, flash, g, redirect, render_template, request,
+                   session, url_for)
 from pymongo.errors import DuplicateKeyError
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 
 from .db import add_user, get_user_by_id, get_user_by_username
 
