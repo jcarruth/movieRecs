@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-sm bg-dark text-white navbar-dark">
+    <nav class="navbar navbar-expand-sm bg-dark text-white navbar-dark fixed-top">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('index') }}">Movie Recs</a>
             <ul class="navbar-nav">
@@ -30,7 +30,7 @@
             </ul>
         </div>
     </nav>
-    <div class="container">
+    <div class="container my-5">
         <section>
             <header>
                 {% block header %}{% endblock %}
