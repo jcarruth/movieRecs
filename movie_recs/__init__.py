@@ -5,9 +5,13 @@ import os
 from flask import Flask
 
 
-def create_app(test_config=None):
+def create_app(test_config=None, instance_path=None):
     """ create and configure the flask app """
-    app = Flask(__name__, instance_relative_config=True)
+    app = Flask(
+        __name__,
+        instance_relative_config=True,
+        instance_path=instance_path
+    )
 
     app.config.from_mapping(
         DB_USER="root",
