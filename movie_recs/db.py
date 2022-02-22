@@ -2,11 +2,10 @@
 
 from bson.objectid import ObjectId
 from flask import Flask, current_app, g
-from pymongo import MongoClient
-from pymongo.database import Database
+import pymongo
 
 
-def get_db() -> Database:
+def get_db() -> pymongo.database.Database:
     """Provides access to the database"""
 
     if "database" not in g:
@@ -15,7 +14,7 @@ def get_db() -> Database:
         host = current_app.config["DB_HOST"]
         port = current_app.config["DB_PORT"]
         uri = f"mongodb://{username}:{password}@{host}:{port}"
-        client = MongoClient(uri)
+        client = pymongo.MongoClient(uri)
         g.database = client[current_app.config["DB_NAME"]]
 
     return g.database
@@ -23,7 +22,7 @@ def get_db() -> Database:
 
 def close_db(_=None):
     """ Closes the database connection """
-    database: Database = g.pop("db", None)
+    database: pymongo.database.Database = g.pop("db", None)
 
     if database is not None:
         database.client.close()
