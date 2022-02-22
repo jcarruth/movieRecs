@@ -1,0 +1,3 @@
+graft movie_recs/static
+graft movie_recs/templates
+global-exclude *.pyc
