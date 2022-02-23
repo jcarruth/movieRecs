@@ -22,7 +22,7 @@ def get_db() -> pymongo.database.Database:
 
 def close_db(_=None):
     """ Closes the database connection """
-    database: pymongo.database.Database = g.pop("db", None)
+    database: pymongo.database.Database = g.pop("database", None)
 
     if database is not None:
         database.client.close()
