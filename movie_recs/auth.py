@@ -57,6 +57,7 @@ def login():
         if error is None:
             session.clear()
             session["user_id"] = user["_id"]
+            g.user = user
 
             return redirect(url_for("index"))
 
@@ -69,6 +70,7 @@ def login():
 def logout():
     """ Log the current user out """
     session.clear()
+    g.user = None
     return redirect(url_for("index"))
 
 
