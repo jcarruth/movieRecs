@@ -8,6 +8,7 @@ from movie_recs import create_app
 from movie_recs.db import init_collections
 
 TEST_MONGO_HOST = "localhost"
+TEST_OMDB_API_KEY = "TEST_OMDB_API_KEY"
 
 
 class AppTestFixture(unittest.TestCase):
@@ -22,6 +23,7 @@ class AppTestFixture(unittest.TestCase):
             {
                 "TESTING": True,
                 "DB_HOST": TEST_MONGO_HOST,
+                "OMDB_API_KEY": TEST_OMDB_API_KEY,
             }
         )
 
