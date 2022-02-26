@@ -2,7 +2,7 @@
 
 from flask import Blueprint, render_template
 
-from .db import get_movies, get_movie_by_slug
+from .db import get_movie_by_slug, get_movies
 
 bp = Blueprint("movies", __name__)
 
