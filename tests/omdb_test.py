@@ -54,13 +54,18 @@ class TestOmdbInterface(AppContextTestFixture):
             json={"Response": False},
         )
 
+    def assertDictContainsDict(self, test_dict: dict, sub_dict: dict):
+        """ Replacement for unittest.assertDictContainsSubset """
+        test_sub_dict = {k: test_dict.get(k, None) for k in sub_dict.keys()}
+        self.assertEqual(test_sub_dict, sub_dict)
+
     @responses.activate
     def test_get_movie_data_contains_title(self):
         """ Test that the returned movie data includes the title """
         movie_data = omdb.get_movie_data(self.test_movie_title)
 
         title_data = {"Title": self.test_movie_title}
-        self.assertDictContainsSubset(title_data, movie_data)
+        self.assertDictContainsDict(movie_data, title_data)
 
     @responses.activate
     def test_get_movie_data_contains_synopsis(self):
@@ -68,7 +73,7 @@ class TestOmdbInterface(AppContextTestFixture):
         movie_data = omdb.get_movie_data(self.test_movie_title)
 
         synopsis_data = {"Synopsis": self.short_plot}
-        self.assertDictContainsSubset(synopsis_data, movie_data)
+        self.assertDictContainsDict(movie_data, synopsis_data)
 
     @responses.activate
     def test_get_movie_data_contains_plot(self):
@@ -76,7 +81,7 @@ class TestOmdbInterface(AppContextTestFixture):
         movie_data = omdb.get_movie_data(self.test_movie_title)
 
         plot_data = {"Synopsis": self.short_plot}
-        self.assertDictContainsSubset(plot_data, movie_data)
+        self.assertDictContainsDict(movie_data, plot_data)
 
     @responses.activate
     def test_get_movie_data_contains_slug(self):
@@ -84,7 +89,7 @@ class TestOmdbInterface(AppContextTestFixture):
         movie_data = omdb.get_movie_data(self.test_movie_title)
 
         slug_data = {"slug": self.expected_slug}
-        self.assertDictContainsSubset(slug_data, movie_data)
+        self.assertDictContainsDict(movie_data, slug_data)
 
     @responses.activate
     def test_get_movie_data_missing_movie(self):
