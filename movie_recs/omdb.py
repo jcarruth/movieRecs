@@ -16,7 +16,7 @@ def get_movie_data(movie_title: str) -> dict:
     response = requests.get("http://www.omdbapi.com/", params=params)
 
     if "Response" not in response.json() or not response.json()["Response"]:
-        raise Exception("")
+        raise LookupError(f"Movie \"{movie_title}\" not found in OMDB.")
 
     synopsis = response.json()["Plot"]
 
