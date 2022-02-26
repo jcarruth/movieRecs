@@ -3,8 +3,22 @@ from unittest.mock import MagicMock, patch
 
 import mongomock
 from movie_recs.db import get_db
+from movie_recs.movie_list import top_100_classic_movies
+import slugify
 
 from fixtures import AppTestFixture
+
+
+def get_dummy_movie_data(movie_title):
+    """ Return simplified movie data that omdb.get_movie_data would return """
+    movie_data = {
+        "Title": movie_title,
+        "slug": slugify.slugify(movie_title),
+        "Synopsis": "Short plot",
+        "Plot": "Full plot",
+    }
+
+    return movie_data
 
 
 class DatabaseTest(AppTestFixture):
@@ -28,10 +42,17 @@ class DatabaseTest(AppTestFixture):
 
         mock_close_method.assert_called_once_with(database.client)
 
-    @patch("movie_recs.cli.init_db")
-    def test_db_initialization(self, mock_init_db):
-        """ Ensure that running the init-db command through cli calls init_db method """
+    @patch("movie_recs.cli.get_movie_data", new=get_dummy_movie_data)
+    def test_db_initialization(self):
+        """ Ensure that running the init-db adds top 100 classic movies to db """
 
         self.app.test_cli_runner().invoke(args=["init-db"])
 
-        mock_init_db.assert_called()
+        with self.app.app_context():
+            database = get_db()
+            movies = database.movies
+            titles_in_db = [m["Title"] for m in movies.find()]
+
+        titles_in_db.sort()
+
+        self.assertListEqual(titles_in_db, sorted(top_100_classic_movies))
