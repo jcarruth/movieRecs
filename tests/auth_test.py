@@ -1,9 +1,10 @@
 """ Test behavior of authentication module """
 
+from typing import Union
+
 from flask import g, session, url_for
 from flask.testing import FlaskClient
 from movie_recs.db import get_user_by_username
-from typing import Union
 from werkzeug.test import TestResponse
 
 from fixtures import AppContextTestFixture
