@@ -4,14 +4,16 @@
 <h1>{% block title %}{% endblock %}</h1>
 {% endblock %}
 {% block content %}
-<form method="post">
+<form method="post" class="needs-validation" novalidate>
     <div class="mb-3 mt-3">
         <label for="username" class="form-label">Username</label>
         <input class="form-control" name="username" id="username" placeholder="Enter username" required>
+        <div class="invalid-feedback">A username is required.</div>
     </div>
     <div class="mb-3">
         <label for="password" class="form-label">Password</label>
         <input class="form-control" type="password" name="password" id="password" placeholder="Enter password" required>
+        <div class="invalid-feedback">A password is required.</div>
     </div>
     <input type="submit" class="btn btn-primary" value="{% block button %}{% endblock %}">
 </form>
