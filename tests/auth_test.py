@@ -31,6 +31,10 @@ class AuthTest(AppContextTestFixture):
             self.login_url = url_for("auth.login")
             self.logout_url = url_for("auth.logout")
 
+        self.login_required_paths = [
+            "/movie/add",
+        ]
+
     def post(self, url, data, client: Union[FlaskClient, None] = None) -> TestResponse:
         """ Helper function to send a POST """
         if client is None:
@@ -181,3 +185,25 @@ class AuthTest(AppContextTestFixture):
 
             self.assertNotIn("user_id", session)
             self.assertIsNone(g.user)
+
+    def test_login_required_redirects_if_not_logged_in(self):
+        """ If the user isn't logged in and tries to access a page that requires login, they should be redirected """
+
+        login_url = "http://localhost" + self.login_url
+
+        for path in self.login_required_paths:
+            with self.subTest(path=path):
+                response = self.app.test_client().get(path)
+                self.assertEqual(response.location, login_url)
+
+    def test_login_required_when_logged_in(self):
+        """ If the user is logged in they should be able to access any page that requires login """
+
+        client = self.app.test_client()
+        self.register_user(client=client)
+        self.login(client=client)
+
+        for path in self.login_required_paths:
+            with self.subTest(path=path):
+                response = client.get(path)
+                self.assertIsNone(response.location)
