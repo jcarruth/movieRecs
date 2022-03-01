@@ -50,7 +50,7 @@
                 {% block header %}{% endblock %}
             </header>
             {% for message in get_flashed_messages() %}
-            <div>{{ message }}</div>
+            <div class="alert alert-info">{{ message }}</div>
             {% endfor %}
             {% block content %}{% endblock %}
         </section>
