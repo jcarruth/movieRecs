@@ -1,16 +1,16 @@
 """ Test behavior of authentication module """
 
-from typing import Union
+from typing import Optional
 
 from flask import g, session, url_for
 from flask.testing import FlaskClient
 from movie_recs.db import get_user_by_username
 from werkzeug.test import TestResponse
 
-from fixtures import AppContextTestFixture
+from fixtures import AuthenticationTestFixture
 
 
-class AuthTest(AppContextTestFixture):
+class AuthTest(AuthenticationTestFixture):
     """ Test behavior of authentication module """
 
     class InputValidationTestCase:
@@ -29,47 +29,19 @@ class AuthTest(AppContextTestFixture):
         with self.app.test_request_context():
             self.register_url = url_for("auth.register")
             self.login_url = url_for("auth.login")
-            self.logout_url = url_for("auth.logout")
 
         self.login_required_paths = [
             "/movie/add",
         ]
 
-    def post(self, url, data, client: Union[FlaskClient, None] = None) -> TestResponse:
-        """ Helper function to send a POST """
-        if client is None:
-            client = self.app.test_client()
-        response = client.post(url, data=data)
-        return response
-
-    def register_user(self, username="user", password="pass", client: Union[FlaskClient, None] = None) -> TestResponse:
-        """ Helper function to easily register a user """
-
-        return self.post(
-            self.register_url,
-            data={
-                "username": username,
-                "password": password
-            },
-            client=client
-        )
-
-    def login(self, username="user", password="pass", client: Union[FlaskClient, None] = None) -> TestResponse:
-        """ Helper function to easily login """
-
-        return self.post(
-            self.login_url,
-            data={
-                "username": username,
-                "password": password
-            },
-            client=client
-        )
-
     def test_register_is_reachable(self):
         """ Test that the register page can be reached """
+
+        with self.app.test_request_context():
+            register_url = url_for("auth.register")
+
         client = self.app.test_client()
-        response = client.get(self.register_url)
+        response = client.get(register_url)
 
         self.assertEqual(response.status_code, 200)
 
@@ -87,7 +59,7 @@ class AuthTest(AppContextTestFixture):
 
     def test_successful_registration_redirected_to_login(self):
         """ Test after registering, a user is redirected to the login page """
-        response = self.register_user()
+        response = self.register_user("user_to_register")
 
         self.assertIn("Location", response.headers)
         redirect_location = response.headers["Location"]
@@ -181,7 +153,7 @@ class AuthTest(AppContextTestFixture):
         self.login()
 
         with self.app.test_client() as client:
-            client.get(self.logout_url)
+            self.logout(client)
 
             self.assertNotIn("user_id", session)
             self.assertIsNone(g.user)

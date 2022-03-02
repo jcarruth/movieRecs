@@ -1,11 +1,15 @@
 """ Test fixtures to provide easier setup and tear down of application """
 
-import unittest
 import contextlib
+import unittest
+from typing import Optional
 
 import mongomock
+from flask import url_for
+from flask.testing import FlaskClient
 from movie_recs import create_app
 from movie_recs.db import init_collections
+from werkzeug.test import TestResponse
 
 TEST_MONGO_HOST = "localhost"
 TEST_OMDB_API_KEY = "TEST_OMDB_API_KEY"
@@ -40,3 +44,70 @@ class AppContextTestFixture(AppTestFixture):
         with contextlib.ExitStack() as stack:
             stack.enter_context(self.app.app_context())
             self.addCleanup(stack.pop_all().close)
+
+
+class AuthenticationTestFixture(AppContextTestFixture):
+    """ Fixture for running tests that requiring logging in """
+
+    default_username = "default_username"
+    default_password = "default_password"
+
+    def setUp(self):
+        super().setUp()
+
+        self.register_user()
+
+    def post(self, url, data, client: Optional[FlaskClient] = None) -> TestResponse:
+        """ Helper function to send a POST """
+        if client is None:
+            client = self.app.test_client()
+        response = client.post(url, data=data)
+        return response
+
+    def register_user(
+        self,
+        username=default_username,
+        password=default_password,
+        client: Optional[FlaskClient] = None
+    ) -> TestResponse:
+        """ Helper function to easily register a user """
+
+        with self.app.test_request_context():
+            register_url = url_for("auth.register")
+
+        return self.post(
+            register_url,
+            data={
+                "username": username,
+                "password": password
+            },
+            client=client
+        )
+
+    def login(
+        self,
+        username=default_username,
+        password=default_password,
+        client: Optional[FlaskClient] = None
+    ) -> TestResponse:
+        """ Helper function to easily login """
+
+        with self.app.test_request_context():
+            login_url = url_for("auth.login")
+
+        return self.post(
+            login_url,
+            data={
+                "username": username,
+                "password": password
+            },
+            client=client
+        )
+
+    def logout(self, client: Optional[FlaskClient] = None):
+        """ Helper function to easily logout """
+
+        with self.app.test_request_context():
+            logout_url = url_for("auth.logout")
+
+        client.get(logout_url)
