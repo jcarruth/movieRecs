@@ -155,7 +155,7 @@ class AuthTest(AuthenticationTestFixture):
             self.assertIsNone(g.user)
 
     def test_login_required_redirects_if_not_logged_in(self):
-        """ If the user isn't logged in and tries to access a page that requires login, they should be redirected """
+        """ Accessing a page that requires login should redirect users that aren't logged in """
 
         login_url = "http://localhost" + self.login_url
 
