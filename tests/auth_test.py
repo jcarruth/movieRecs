@@ -1,6 +1,6 @@
 """ Test behavior of authentication module """
 
-from dataclasses import dataclass
+from typing import NamedTuple
 
 from flask import g, session, url_for
 from movie_recs.db import get_user_by_username
@@ -11,8 +11,7 @@ from fixtures import AuthenticationTestFixture
 class AuthTest(AuthenticationTestFixture):
     """ Test behavior of authentication module """
 
-    @dataclass
-    class InputValidationTestCase:
+    class InputValidationTestCase(NamedTuple):
         """ Helper class bundling register/login inputs and expected message """
         username: str
         password: str
