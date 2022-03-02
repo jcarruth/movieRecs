@@ -1,5 +1,7 @@
 """ Test behavior of authentication module """
 
+from dataclasses import dataclass
+
 from flask import g, session, url_for
 from movie_recs.db import get_user_by_username
 
@@ -9,15 +11,12 @@ from fixtures import AuthenticationTestFixture
 class AuthTest(AuthenticationTestFixture):
     """ Test behavior of authentication module """
 
+    @dataclass
     class InputValidationTestCase:
         """ Helper class bundling register/login inputs and expected message """
-
-        def __init__(self, username: str, password: str, message: str):
-            self.data = {
-                "username": username,
-                "password": password,
-            }
-            self.message = message
+        username: str
+        password: str
+        message: str
 
     def setUp(self):
         super().setUp()
@@ -78,7 +77,7 @@ class AuthTest(AuthenticationTestFixture):
 
         for case in test_cases:
             with self.subTest(case=case):
-                response = self.register_user(**case.data)
+                response = self.register_user(case.username, case.password)
                 redirect_msg = "Implies redirection"
                 self.assertNotIn("Location", response.headers, redirect_msg)
                 self.assertIn(case.message, response.data)
@@ -137,7 +136,7 @@ class AuthTest(AuthenticationTestFixture):
 
         for case in test_cases:
             with self.subTest(case=case):
-                response = self.login(**case.data)
+                response = self.login(case.username, case.password)
                 redirect_msg = "Implies redirection"
                 self.assertNotIn("Location", response.headers, redirect_msg)
                 self.assertIn(case.message, response.data)
