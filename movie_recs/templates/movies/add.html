@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block header %}
+<h1>{% block title %}Add Movie{% endblock %}</h1>
+{% endblock %}
+{% block content %}
+<form method="post" class="needs-validation" novalidate>
+    <div class="mb-3 mt-3">
+        <label for="movie_title" class="form-label">Movie Title</label>
+        <input class="form-control" name="movie_title" id="movie_title" placeholder="Enter movie title"
+            value="{{movie_title}}" required>
+        <div class="invalid-feedback">A movie title is required.</div>
+    </div>
+    <input type="submit" class="btn btn-primary" value="Add">
+</form>
+{% endblock %}
