@@ -51,7 +51,7 @@ class TestOmdbInterface(AppContextTestFixture):
         responses.add(
             responses.GET,
             "http://www.omdbapi.com",
-            json={"Response": False},
+            json={"Response": "False", "Error": "Movie not found!"},
         )
 
     def assert_dict_contains_dict(self, test_dict: dict, sub_dict: dict):

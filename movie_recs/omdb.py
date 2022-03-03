@@ -15,10 +15,17 @@ def get_movie_data(movie_title: str) -> dict:
 
     response = requests.get("http://www.omdbapi.com/", params=params)
 
-    if "Response" not in response.json() or not response.json()["Response"]:
-        raise LookupError(f"Movie \"{movie_title}\" not found in OMDB.")
+    response_json = response.json()
 
-    synopsis = response.json()["Plot"]
+    if "Response" not in response_json or response_json["Response"] == "False":
+        if "Error" in response_json:
+            if response_json["Error"] == "Movie not found!":
+                raise LookupError(
+                    f"Movie \"{movie_title}\" not found in OMDB.")
+            raise Exception(response_json["Error"])
+        raise Exception("An unknown error occurred")
+
+    synopsis = response_json["Plot"]
 
     params["plot"] = "full"
     response = requests.get("http://www.omdbapi.com/", params=params)
