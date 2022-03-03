@@ -1,4 +1,5 @@
 """ Test the interface to the Open Movie Database """
+import json
 
 import responses
 from movie_recs import omdb
@@ -17,41 +18,38 @@ class TestOmdbInterface(AppContextTestFixture):
         self.short_plot = "Short plot"
         self.full_plot = "Full plot"
 
-        short_params = {
-            "apikey": TEST_OMDB_API_KEY,
-            "t": self.test_movie_title,
-            "plot": "short"
-        }
+        def request_callback(request):
+            """ Generate an appropriate response for the request params """
 
-        full_params = short_params.copy()
-        full_params["plot"] = "full"
+            params: dict = request.params
+            response_body = {}
+            if "apikey" not in params or "t" not in params:
+                pass
 
-        self.short_response = {
-            "Response": True,
-            "Title": self.test_movie_title,
-            "Plot": self.short_plot,
-        }
-        self.full_response = self.short_response.copy()
-        self.full_response["Plot"] = self.full_plot
+            elif params["apikey"] != TEST_OMDB_API_KEY:
+                response_body["Response"] = "False"
+                response_body["Error"] = "Invalid OMDB api key!"
 
-        responses.add(
+            elif params["t"] != self.test_movie_title:
+                response_body["Response"] = "False"
+                response_body["Error"] = "Movie not found!"
+            else:
+                response_body["Response"] = "True"
+                response_body["Title"] = self.test_movie_title
+
+                if params.get("plot", "short") == "short":
+                    response_body["Plot"] = self.short_plot
+                else:
+                    response_body["Plot"] = self.full_plot
+
+            headers = {'request-id': '728d329e-0e86-11e4-a748-0c84dc037c13'}
+            return (200, headers, json.dumps(response_body))
+
+        responses.add_callback(
             responses.GET,
             "http://www.omdbapi.com",
-            json=self.short_response,
-            match=[responses.matchers.query_param_matcher(short_params)],
-        )
-
-        responses.add(
-            responses.GET,
-            "http://www.omdbapi.com",
-            json=self.full_response,
-            match=[responses.matchers.query_param_matcher(full_params)],
-        )
-
-        responses.add(
-            responses.GET,
-            "http://www.omdbapi.com",
-            json={"Response": "False", "Error": "Movie not found!"},
+            callback=request_callback,
+            content_type='application/json',
         )
 
     def assert_dict_contains_dict(self, test_dict: dict, sub_dict: dict):
