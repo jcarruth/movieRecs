@@ -24,9 +24,9 @@ class AuthTest(AuthenticationTestFixture):
             self.register_url = url_for("auth.register")
             self.login_url = url_for("auth.login")
 
-        self.login_required_paths = [
-            "/movie/add",
-        ]
+            self.login_required_paths = [
+                url_for("movies.add"),
+            ]
 
     def test_register_is_reachable(self):
         """ Test that the register page can be reached """
@@ -166,7 +166,7 @@ class AuthTest(AuthenticationTestFixture):
         """ If the user is logged in they should be able to access any page that requires login """
 
         client = self.app.test_client()
-        self.register_user(client=client)
+        self.register_user()
         self.login(client=client)
 
         for path in self.login_required_paths:
