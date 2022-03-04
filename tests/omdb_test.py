@@ -23,10 +23,8 @@ class TestOmdbInterface(AppContextTestFixture):
 
             params: dict = request.params
             response_body = {}
-            if "apikey" not in params or "t" not in params:
-                pass
 
-            elif params["apikey"] != TEST_OMDB_API_KEY:
+            if "apikey" not in params or params["apikey"] != TEST_OMDB_API_KEY:
                 response_body["Response"] = "False"
                 response_body["Error"] = "Invalid OMDB api key!"
 
