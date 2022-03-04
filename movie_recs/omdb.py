@@ -15,9 +15,12 @@ def get_movie_data(movie_title: str) -> dict:
 
     response = requests.get("http://www.omdbapi.com/", params=params)
 
-    response_json = response.json()
+    content_type = response.headers.get("Content-Type", "plain/text")
+    response_contains_json = content_type == "application/json"
 
-    if "Response" not in response_json or response_json["Response"] == "False":
+    response_json = response.json() if response_contains_json else {}
+
+    if response.status_code >= 400 or response_json.get("Response", "False") == "False":
         if "Error" in response_json:
             if response_json["Error"] == "Movie not found!":
                 raise LookupError(
