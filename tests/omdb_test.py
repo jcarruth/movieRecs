@@ -1,5 +1,6 @@
 """ Test the interface to the Open Movie Database """
 import json
+from typing import NamedTuple, Optional
 
 import responses
 from movie_recs import omdb
@@ -102,3 +103,34 @@ class TestOmdbInterface(AppContextTestFixture):
             omdb.get_movie_data(self.test_movie_title)
 
         self.assertIn("Invalid OMDB api key!", str(e.exception))
+
+    @responses.activate
+    def test_general_errors_handled(self):
+        """ Test that a relevant exception is thrown when a movie is not found """
+
+        class GeneralErrorTestCase(NamedTuple):
+            """ Helper class bundling general errors responses from OMDB """
+            status: int
+            response_data: Optional[dict]
+
+        test_cases = [
+            GeneralErrorTestCase(403, None),
+            GeneralErrorTestCase(404, None),
+            GeneralErrorTestCase(200, {}),
+            GeneralErrorTestCase(200, {"Response": "False"}),
+        ]
+
+        for test_case in test_cases:
+            with self.subTest(test_case=test_case):
+
+                responses.replace(
+                    responses.GET,
+                    "http://www.omdbapi.com",
+                    status=test_case.status,
+                    json=test_case.response_data
+                )
+
+                with self.assertRaises(Exception) as e:
+                    omdb.get_movie_data(self.test_movie_title)
+
+                self.assertIn("An unknown error occurred", str(e.exception))
