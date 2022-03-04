@@ -98,5 +98,5 @@ class TestOmdbInterface(AppContextTestFixture):
         """ Test that a relevant exception is thrown when a movie is not found """
         self.app.config.from_mapping(OMDB_API_KEY="not a real key")
 
-        with self.assertRaises(Exception, msg="Invalid OMDB api key!"):
+        with self.assertRaises(Exception):
             omdb.get_movie_data(self.test_movie_title)
